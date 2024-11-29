@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import Header from "../../component/Header/LoginHeader";
 import MusicInfoTable from "../../component/MyPage/MusicInfoTable";
+import { useNavigate } from "react-router-dom";
 
 const PracticedMusic = () => {
+  const navigate = useNavigate();
+
   const data = [
     {
       id: "1",
@@ -29,9 +32,15 @@ const PracticedMusic = () => {
             </WelcomeMessage>
           </UserInfo>
           <ButtonGroup>
-            <SidebarButton>프로필 수정</SidebarButton>
-            <SidebarButton>연습한 곡</SidebarButton>
-            <SidebarButton>월간 연습 기록</SidebarButton>
+            <SidebarButton onClick={() => navigate("/MyPage/EditProfile")}>
+              프로필 수정
+            </SidebarButton>
+            <SidebarButton onClick={() => navigate("/MyPage/PracticedMusic")}>
+              연습한 곡
+            </SidebarButton>
+            <SidebarButton onClick={() => navigate("/MyPage/MonthlyPractice")}>
+              월간 연습 기록
+            </SidebarButton>
           </ButtonGroup>
         </Sidebar>
         <MainContent>

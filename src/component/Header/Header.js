@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import DrumPic from "../../asset/SignIn/드럼.svg";
 import UserPic from "../../asset/SignIn/유저.svg";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -11,10 +12,10 @@ const Header = () => {
       </Logo>
       <Nav>
         <NavItem>
-          <a href="#login">로그인</a>
+          <Link to="/">로그인</Link>
         </NavItem>
         <NavItem>
-          <a href="#signup">회원가입</a>
+          <Link to="/SignIn">회원가입</Link>
         </NavItem>
         <UserIcon>
           <img className="user-icon" src={UserPic} />

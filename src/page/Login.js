@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../component/Header/Header";
 
 const SignIn = () => {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/Home");
+  };
+
   return (
     <Container>
       <Header />
@@ -16,9 +25,17 @@ const SignIn = () => {
         </LeftContent>
         <RightContent>
           <Form>
-            <Input placeholder="아이디" />
-            <Input placeholder="비밀번호" type="password" />
-            <Button>로그인</Button>
+            <Input
+              placeholder="아이디"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+            />
+            <Input
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button onClick={handleLogin}>로그인</Button>
           </Form>
         </RightContent>
       </Content>

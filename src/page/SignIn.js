@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import Header from "../component/Header/Header";
 
 const SignIn = () => {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignUp = () => {
+    // 회원가입 로직 (예: 데이터 검증 및 서버 통신)
+    console.log("아이디:", id);
+    console.log("비밀번호:", password);
+    console.log("이름:", name);
+    console.log("이메일:", email);
+
+    // 로그인 페이지로 이동
+    navigate("/");
+  };
+
   return (
     <Container>
       <Header />
@@ -16,11 +34,29 @@ const SignIn = () => {
         </LeftContent>
         <RightContent>
           <Form>
-            <Input placeholder="아이디" />
-            <Input placeholder="비밀번호" type="password" />
-            <Input placeholder="이름" />
-            <Input placeholder="이메일" type="email" />
-            <Button>회원가입</Button>
+            <Input
+              placeholder="아이디"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+            />
+            <Input
+              placeholder="비밀번호"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Input
+              placeholder="이름"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              placeholder="이메일"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Button onClick={handleSignUp}>회원가입</Button>
           </Form>
         </RightContent>
       </Content>
@@ -90,6 +126,7 @@ const Input = styled.input`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  padding: 10px; /* 여백 추가 */
 `;
 const Button = styled.button`
   width: 397px;
