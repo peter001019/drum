@@ -1,50 +1,52 @@
 import axios from "axios";
 
-// Axios 기본 인스턴스 생성
+// Axios 인스턴스 생성
 const apiClient = axios.create({
-  baseURL: "https://musicpractice-f638a0822fee.herokuapp.com", // 기본 API URL
-  timeout: 5000, // 요청 타임아웃 설정 (ms)
+  baseURL: "https://musicpractice-f638a0822fee.herokuapp.com", // API 기본 URL
+  timeout: 5000, // 요청 타임아웃
   headers: {
-    "Content-Type": "application/json", // 요청 헤더 기본 설정
-    Authorization: `Bearer YOUR_ACCESS_TOKEN`, // 토큰 인증이 필요한 경우
+    "Content-Type": "application/json",
   },
 });
 
-// 요청 인터셉터 설정
+// 토큰 저장소 (예: 로그인 성공 시 설정)
+let authToken = null;
+
+// 토큰 설정 함수
+export const setAuthToken = (token) => {
+  authToken = token;
+};
+
+// 요청 인터셉터: 요청마다 토큰 추가
 apiClient.interceptors.request.use(
   (config) => {
-    // 요청을 보내기 전에 작업
-    console.log("Request Sent:", config);
+    if (authToken) {
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
     return config;
   },
   (error) => {
-    // 요청 에러 처리
     console.error("Request Error:", error);
     return Promise.reject(error);
   }
 );
 
-// 응답 인터셉터 설정
+// 응답 인터셉터: 에러 처리
 apiClient.interceptors.response.use(
-  (response) => {
-    // 응답 데이터를 가공하거나 로깅
-    console.log("Response Received:", response);
-    return response.data; // 필요한 데이터만 반환
-  },
+  (response) => response,
   (error) => {
-    // 응답 에러 처리
     console.error("Response Error:", error);
     return Promise.reject(error);
   }
 );
 
-// API 요청 함수 템플릿
+// API 요청 함수
 export const api = {
   // GET 요청
-  get: async (endpoint, params = {}) => {
+  get: async (path, params = {}) => {
     try {
-      const response = await apiClient.get(endpoint, { params });
-      return response;
+      const response = await apiClient.get(path, { params });
+      return response.data;
     } catch (error) {
       console.error("GET Request Error:", error);
       throw error;
@@ -55,7 +57,7 @@ export const api = {
   post: async (endpoint, data = {}) => {
     try {
       const response = await apiClient.post(endpoint, data);
-      return response;
+      return response.data;
     } catch (error) {
       console.error("POST Request Error:", error);
       throw error;
@@ -66,7 +68,7 @@ export const api = {
   put: async (endpoint, data = {}) => {
     try {
       const response = await apiClient.put(endpoint, data);
-      return response;
+      return response.data;
     } catch (error) {
       console.error("PUT Request Error:", error);
       throw error;
@@ -77,7 +79,7 @@ export const api = {
   delete: async (endpoint, params = {}) => {
     try {
       const response = await apiClient.delete(endpoint, { params });
-      return response;
+      return response.data;
     } catch (error) {
       console.error("DELETE Request Error:", error);
       throw error;

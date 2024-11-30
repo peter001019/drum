@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Header from "../component/Header/Header";
+import { api } from "../api/apiClient";
 
 const SignIn = () => {
   const [id, setId] = useState("");
@@ -10,15 +11,24 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
-    // 회원가입 로직 (예: 데이터 검증 및 서버 통신)
-    console.log("아이디:", id);
-    console.log("비밀번호:", password);
-    console.log("이름:", name);
-    console.log("이메일:", email);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
 
-    // 로그인 페이지로 이동
-    navigate("/");
+    try {
+      const reqItem = {
+        id,
+        password,
+        name,
+        email,
+      };
+
+      const response = await api.post("/user/signup/", reqItem);
+
+      navigate("/");
+    } catch (err) {
+      alert("회원가입에 문제가 있습니다.");
+      console.error("Error : ", err.response.data);
+    }
   };
 
   return (
@@ -110,7 +120,7 @@ const Description = styled.div`
   font-weight: 400;
   line-height: normal;
 `;
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;

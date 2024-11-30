@@ -2,14 +2,29 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../component/Header/Header";
+import { api, setAuthToken } from "../api/apiClient";
 
-const SignIn = () => {
+const LogIn = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate("/Home");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const reqItem = {
+        id,
+        password,
+      };
+
+      const response = await api.post("/user/login/", reqItem);
+      setAuthToken(response.data.accessToken);
+
+      navigate("/Home");
+    } catch (err) {
+      console.error("Error : ", err);
+    }
   };
 
   return (
@@ -24,7 +39,7 @@ const SignIn = () => {
           </Description>
         </LeftContent>
         <RightContent>
-          <Form>
+          <Form onSubmit={handleLogin}>
             <Input
               placeholder="아이디"
               value={id}
@@ -35,7 +50,7 @@ const SignIn = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Button onClick={handleLogin}>로그인</Button>
+            <Button type="submit">로그인</Button>
           </Form>
         </RightContent>
       </Content>
@@ -43,7 +58,7 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default LogIn;
 
 const Container = styled.div`
   display: flex;
@@ -89,7 +104,7 @@ const Description = styled.div`
   font-weight: 400;
   line-height: normal;
 `;
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;

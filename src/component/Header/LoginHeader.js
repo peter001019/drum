@@ -4,7 +4,7 @@ import DrumPic from "../../asset/SignIn/드럼.svg";
 import UserPic from "../../asset/SignIn/유저.svg";
 import { Link, useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ userInfo }) => {
   const navigate = useNavigate();
 
   const logoutHandler = () => {
@@ -24,10 +24,16 @@ const Header = () => {
         </NavItem>
         <NavItem>
           <UserContainer>
-            <Link to="/MyPage">회원123</Link>
-            <UserIcon>
-              <img className="user-icon" src={UserPic} />
-            </UserIcon>
+            {userInfo ? (
+              <>
+                <Link to="/MyPage">{userInfo.name}</Link>
+                <UserIcon>
+                  <img className="user-icon" src={UserPic} />
+                </UserIcon>
+              </>
+            ) : (
+              <></>
+            )}
           </UserContainer>
         </NavItem>
       </Nav>

@@ -1,23 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../../component/Header/LoginHeader";
 import MusicInfoTable from "../../component/MyPage/MusicInfoTable";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api/apiClient";
 
 const MonthlyPractice = () => {
   const navigate = useNavigate();
 
-  const data = [
-    {
-      id: "1",
-      title: "Die With A Smile",
-      artist: "Lady Gaga, Bruno Mars",
-      album: "Die with a Smile",
-      playCount: "7331300",
-      duration: "4:11",
-      practiceCount: "5",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get("/user/profilecheck/");
+        setUserInfo(response);
+      } catch (error) {
+        console.error("데이터 조회 실패 : ", error);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/practice/monthlist/");
+        setData(response.data);
+      } catch (error) {
+        console.error("데이터 조회 실패 : ", error);
+      }
+    };
+
+    const fetchTime = async () => {
+      try {
+        const response = await api.get("/practice/monthrecode/");
+        setTime(response.data.practice_time);
+      } catch (error) {
+        console.error("시간 조회 실패 : ", error);
+      }
+    };
+
+    fetchUserInfo();
+    fetchData();
+    fetchTime();
+  }, []);
 
   return (
     <Container>
@@ -26,10 +52,8 @@ const MonthlyPractice = () => {
         <Sidebar>
           <MyPageTitle>My Page</MyPageTitle>
           <UserInfo>
-            <UserName>회원123</UserName>
-            <WelcomeMessage>
-              안녕하세요! 회원123입니다. 잘 부탁드립니다!
-            </WelcomeMessage>
+            <UserName>{userInfo.name}</UserName>
+            <WelcomeMessage>{userInfo.introduction}</WelcomeMessage>
           </UserInfo>
           <ButtonGroup>
             <SidebarButton onClick={() => navigate("/MyPage/EditProfile")}>
@@ -47,7 +71,7 @@ const MonthlyPractice = () => {
           <PracticeTime>
             <TimeTitle>월간 연습 시간</TimeTitle>
             <TimeBox>
-              <Time>02:35:46</Time>
+              <Time>{time}</Time>
             </TimeBox>
           </PracticeTime>
           <MusicInfoTable data={data} />

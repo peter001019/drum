@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../component/Header/LoginHeader";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api/apiClient";
 
 const Mypage = () => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({});
 
-  const data = [
-    {
-      id: "1",
-      title: "Die With A Smile",
-      artist: "Lady Gaga, Bruno Mars",
-      album: "Die with a Smile",
-      playCount: "7331300",
-      duration: "4:11",
-      practiceCount: "5",
-    },
-  ];
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get("/user/profilecheck/");
+        setUserInfo(response);
+      } catch (error) {
+        console.error("데이터 조회 실패 : ", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   return (
     <Container>
@@ -25,10 +28,8 @@ const Mypage = () => {
         <Sidebar>
           <MyPageTitle>My Page</MyPageTitle>
           <UserInfo>
-            <UserName>회원123</UserName>
-            <WelcomeMessage>
-              안녕하세요! 회원123입니다. 잘 부탁드립니다!
-            </WelcomeMessage>
+            <UserName>{userInfo.name}</UserName>
+            <WelcomeMessage>{userInfo.introduction}</WelcomeMessage>
           </UserInfo>
           <ButtonGroup>
             <SidebarButton onClick={() => navigate("/MyPage/EditProfile")}>

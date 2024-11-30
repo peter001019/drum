@@ -8,7 +8,7 @@ const MusicInfo = ({ index, item }) => {
       <Cell>
         <TitleContainer>
           <AlbumImage
-            src="https://via.placeholder.com/50" // Replace with the album image URL
+            src={item.album_cover} // Replace with the album image URL
             alt="Album"
           />
           <div>
@@ -17,10 +17,10 @@ const MusicInfo = ({ index, item }) => {
           </div>
         </TitleContainer>
       </Cell>
-      <Cell>{item.playCount}</Cell>
-      <Cell>{item.album}</Cell>
-      <Cell>{item.duration}</Cell>
-      <Cell>{item.practiceCount}</Cell>
+      <Cell>{item.total_count}</Cell>
+      <Cell>{item.album_name}</Cell>
+      <Cell>{item.play_time}</Cell>
+      <Cell>{item.practice_count}</Cell>
     </Row>
   );
 };

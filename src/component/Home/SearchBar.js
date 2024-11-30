@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import lens from "../../asset/Home/돋보기.svg";
 
-const searchBar = () => {
+const SearchBar = ({ onSearch }) => {
+  const [data, setData] = useState("");
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onSearch(data);
+    }
+  };
+
   return (
     <Container>
-      <SearchInput placeholder="음악을 검색해보세요!" />
+      <SearchInput
+        placeholder="음악을 검색해보세요!"
+        value={data}
+        onChange={(e) => setData(e.target.value)}
+        onKeyDown={handleKeyPress}
+      />
       <LensPic>
         <img className="lens" src={lens} />
       </LensPic>
@@ -13,7 +25,7 @@ const searchBar = () => {
   );
 };
 
-export default searchBar;
+export default SearchBar;
 
 const Container = styled.div`
   width: 397px;

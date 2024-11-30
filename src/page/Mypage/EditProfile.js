@@ -1,19 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Header from "../../component/Header/LoginHeader";
+import { api } from "../../api/apiClient";
 
 const EditProfile = () => {
-  const [name, setName] = useState("회원123");
-  const [intro, setIntro] = useState("안녕하세요! 회원123입니다");
-  const [email, setEmail] = useState("ggg@gmail.com");
+  const [name, setName] = useState("");
+  const [intro, setIntro] = useState("");
+  const [email, setEmail] = useState("");
+  const [userInfo, setUserInfo] = useState({});
 
   const navigate = useNavigate();
+  const fetchUserInfo = async () => {
+    const reqData = {
+      name,
+      intro,
+      email,
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 기본 폼 제출 동작 막기
+    try {
+      console.log("요청 : ", reqData);
+      const response = await api.get("/user/profilecheck/", reqData);
+      setUserInfo(response);
+      console.log(response);
+    } catch (error) {
+      console.error("데이터 조회 실패 : ", error);
+    }
+  };
 
-    alert("프로필이 수정되었습니다!");
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const reqItem = {
+      name,
+      introduction: intro,
+      email,
+    };
+
+    try {
+      const response = await api.put("/user/profile/", reqItem);
+
+      if (response) {
+        alert("프로필이 수정되었습니다!");
+        fetchUserInfo();
+      }
+    } catch (e) {
+      console.error("Error : ", e);
+    }
   };
 
   return (
@@ -23,8 +60,8 @@ const EditProfile = () => {
         <Sidebar>
           <MyPageTitle>My Page</MyPageTitle>
           <UserInfo>
-            <UserName>{name}</UserName>
-            <WelcomeMessage>{intro}</WelcomeMessage>
+            <UserName>{userInfo.name}</UserName>
+            <WelcomeMessage>{userInfo.introduction}</WelcomeMessage>
           </UserInfo>
           <ButtonGroup>
             <SidebarButton onClick={() => navigate("/MyPage/EditProfile")}>
@@ -43,22 +80,22 @@ const EditProfile = () => {
           <Form onSubmit={handleSubmit}>
             <Label>이름</Label>
             <Input
+              placeholder="회원444"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="회원444"
             />
             <Label>한 줄 소개</Label>
             <Input
               value={intro}
-              onChange={(e) => setIntro(e.target.value)}
               placeholder="안녕하세요! 회원123입니다"
+              onChange={(e) => setIntro(e.target.value)}
             />
             <Label>이메일</Label>
             <Input
               type="email"
+              placeholder="ggg@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="ggg@gmail.com"
             />
             <SubmitButton type="submit">수정 완료</SubmitButton>
           </Form>

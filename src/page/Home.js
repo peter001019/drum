@@ -1,26 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import LoginHeader from "../component/Header/LoginHeader";
 import SearchBar from "../component/Home/SearchBar";
 import Music from "../component/Home/Music";
+import { api } from "../api/apiClient";
 
 const Home = () => {
-  const data = [
-    {
-      id: "1",
-      title: "Die With A Smile",
-      artist: "Lady Gaga, Bruno Mars",
-      album: "Die with a Smile",
-      playCount: "7331300",
-      duration: "4:11",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get("/user/profilecheck/");
+
+        setUserInfo(response);
+      } catch (error) {
+        console.error("데이터 조회 실패 : ", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const handleSearch = async (data) => {
+    try {
+      console.log("검색어:", data);
+      const response = await api.get("/music/search/", { data });
+      console.log("검색 결과:", response.data);
+      setData(response.data);
+    } catch (error) {
+      console.error("검색 실패:", error);
+    }
+  };
 
   return (
     <Container>
-      <LoginHeader />
+      <LoginHeader userInfo={userInfo} />
       <Content>
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
         <Table>
           <thead>
             <tr>

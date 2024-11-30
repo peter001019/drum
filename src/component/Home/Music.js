@@ -9,7 +9,7 @@ const Music = ({ index, item }) => {
       <Cell>
         <TitleContainer>
           <AlbumImage
-            src="https://via.placeholder.com/50" // Replace with the album image URL
+            src={item.album_cover} // Replace with the album image URL
             alt="Album"
           />
           <div>
@@ -23,7 +23,7 @@ const Music = ({ index, item }) => {
       <Cell>{item.duration}</Cell>
       <Cell>
         <ButtonContainer>
-          <PracticeButton />
+          <PracticeButton item={item} />
         </ButtonContainer>
       </Cell>
     </Row>

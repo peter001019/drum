@@ -1,8 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import { api } from "../../api/apiClient";
 
-const PracticeButton = () => {
-  return <Button>+ 연습하기</Button>;
+const PracticeButton = ({ item }) => {
+  const handlePracticeButton = async () => {
+    const music_id = item.music_id;
+
+    try {
+      const response = await api.post("/music/add/", { music_id });
+
+      alert("연습 목록에 추가되었습니다.");
+    } catch (error) {
+      console.error("검색 실패:", error);
+    }
+  };
+
+  return <Button onClick={handlePracticeButton}>+ 연습하기</Button>;
 };
 
 export default PracticeButton;
